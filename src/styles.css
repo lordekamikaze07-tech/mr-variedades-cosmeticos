@@ -1,0 +1,220 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-rose: var(--rose);
+  --color-rose-soft: var(--rose-soft);
+
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+:root {
+  --radius: 0.75rem;
+
+  /* Light — Branco premium, rosé gold, dourado suave */
+  --background: oklch(0.99 0.005 30);
+  --foreground: oklch(0.22 0.02 30);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.02 30);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.02 30);
+
+  --primary: oklch(0.72 0.11 35);              /* Rosé gold */
+  --primary-foreground: oklch(0.99 0.005 30);
+  --secondary: oklch(0.96 0.012 30);
+  --secondary-foreground: oklch(0.28 0.02 30);
+  --muted: oklch(0.96 0.008 30);
+  --muted-foreground: oklch(0.5 0.02 30);
+  --accent: oklch(0.93 0.04 40);                /* Rose soft */
+  --accent-foreground: oklch(0.3 0.04 30);
+  --destructive: oklch(0.58 0.22 25);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.91 0.012 30);
+  --input: oklch(0.91 0.012 30);
+  --ring: oklch(0.72 0.11 35);
+
+  --gold: oklch(0.78 0.13 80);
+  --gold-soft: oklch(0.88 0.08 80);
+  --rose: oklch(0.72 0.11 35);
+  --rose-soft: oklch(0.9 0.06 35);
+
+  --gradient-luxe: linear-gradient(135deg, oklch(0.78 0.13 80) 0%, oklch(0.72 0.11 35) 100%);
+  --gradient-soft: linear-gradient(180deg, oklch(0.99 0.005 30) 0%, oklch(0.95 0.02 35) 100%);
+  --shadow-luxe: 0 20px 60px -20px oklch(0.72 0.11 35 / 0.35), 0 8px 24px -12px oklch(0.78 0.13 80 / 0.25);
+  --shadow-card: 0 2px 12px -2px oklch(0.3 0.02 30 / 0.06), 0 8px 24px -8px oklch(0.72 0.11 35 / 0.08);
+  --shadow-glow: 0 0 40px oklch(0.78 0.13 80 / 0.3);
+}
+
+.dark {
+  /* Dark — Preto premium, dourado luxuoso, grafite */
+  --background: oklch(0.13 0.008 60);
+  --foreground: oklch(0.96 0.012 80);
+  --card: oklch(0.17 0.01 60);
+  --card-foreground: oklch(0.96 0.012 80);
+  --popover: oklch(0.15 0.008 60);
+  --popover-foreground: oklch(0.96 0.012 80);
+
+  --primary: oklch(0.82 0.14 82);               /* Dourado luxuoso */
+  --primary-foreground: oklch(0.13 0.008 60);
+  --secondary: oklch(0.22 0.01 60);
+  --secondary-foreground: oklch(0.96 0.012 80);
+  --muted: oklch(0.2 0.01 60);
+  --muted-foreground: oklch(0.68 0.02 70);
+  --accent: oklch(0.26 0.04 70);
+  --accent-foreground: oklch(0.92 0.06 80);
+  --destructive: oklch(0.65 0.2 25);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.28 0.015 70 / 0.6);
+  --input: oklch(0.25 0.015 70);
+  --ring: oklch(0.82 0.14 82);
+
+  --gold: oklch(0.85 0.15 85);
+  --gold-soft: oklch(0.72 0.12 80);
+  --rose: oklch(0.78 0.11 30);
+  --rose-soft: oklch(0.45 0.06 30);
+
+  --gradient-luxe: linear-gradient(135deg, oklch(0.85 0.15 85) 0%, oklch(0.65 0.13 60) 100%);
+  --gradient-soft: linear-gradient(180deg, oklch(0.13 0.008 60) 0%, oklch(0.18 0.02 70) 100%);
+  --shadow-luxe: 0 20px 60px -20px oklch(0.85 0.15 85 / 0.35), 0 8px 24px -12px oklch(0.85 0.15 85 / 0.2);
+  --shadow-card: 0 2px 12px -2px oklch(0 0 0 / 0.4), 0 8px 32px -8px oklch(0.85 0.15 85 / 0.12);
+  --shadow-glow: 0 0 50px oklch(0.85 0.15 85 / 0.35);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+}
+
+@utility text-gradient-luxe {
+  background: var(--gradient-luxe);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-gradient-luxe {
+  background: var(--gradient-luxe);
+}
+
+@utility bg-gradient-soft {
+  background: var(--gradient-soft);
+}
+
+@utility shadow-luxe {
+  box-shadow: var(--shadow-luxe);
+}
+
+@utility shadow-card-luxe {
+  box-shadow: var(--shadow-card);
+}
+
+@utility shadow-glow-gold {
+  box-shadow: var(--shadow-glow);
+}
+
+@utility glass-panel {
+  background: color-mix(in oklab, var(--background) 70%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--primary) 12%, transparent);
+}
+
+@utility product-card {
+  position: relative;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.4s ease;
+}
+
+@utility product-card-hover {
+  transform: translateY(-8px) scale(1.015);
+  box-shadow: var(--shadow-luxe);
+}
+
+/* Sibling dimming removed — cards only react on direct hover */
+
+/* Animations */
+@keyframes float-particle {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+  50% { transform: translate(20px, -30px) scale(1.1); opacity: 0.8; }
+}
+
+@keyframes shimmer-skel {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer-text {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@utility animate-fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@utility shimmer-loading {
+  background: linear-gradient(
+    90deg,
+    var(--muted) 0%,
+    color-mix(in oklab, var(--primary) 15%, var(--muted)) 50%,
+    var(--muted) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-skel 1.8s infinite linear;
+}
