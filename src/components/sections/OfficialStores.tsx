@@ -1,10 +1,30 @@
 import { ExternalLink } from "lucide-react";
 
 const stores = [
-  { id: "avon", name: "Avon", tag: "Loja oficial", url: "https://www.avon.com.br/" },
-  { id: "natura", name: "Natura", tag: "Loja oficial", url: "https://www.natura.com.br/" },
-  { id: "oboticario", name: "O Boticário", tag: "Loja oficial", url: "https://www.boticario.com.br/" },
-  { id: "eudora", name: "Eudora", tag: "Loja oficial", url: "https://www.eudora.com.br/" },
+  {
+    id: "avon",
+    name: "Avon",
+    tag: "Loja oficial",
+    url: "https://www.minhaloja.natura.com/consultoria/mariadorosario",
+  },
+  {
+    id: "natura",
+    name: "Natura",
+    tag: "Loja oficial",
+    url: "https://www.minhaloja.natura.com/consultoria/mariadorosario",
+  },
+  {
+    id: "oboticario",
+    name: "O Boticário",
+    tag: "Loja oficial",
+    url: "https://www.boticario.com.br/",
+  },
+  {
+    id: "eudora",
+    name: "Eudora",
+    tag: "Loja oficial",
+    url: "https://www.eudora.com.br/",
+  },
 ];
 
 export function OfficialStores() {

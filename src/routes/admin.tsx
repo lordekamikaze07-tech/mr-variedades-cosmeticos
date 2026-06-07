@@ -1,9 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Particles } from "@/components/layout/Particles";
 import { products as INITIAL, type Product } from "@/data/products";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -31,33 +31,78 @@ function AdminPage() {
 const fmt = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
-function Inner() {
-  const [toast, setToast] = useState<null | {
-    type: "success" | "error";
-    message: string;
-  }>(null);
+/* ================= FORM ================= */
+function ProductForm({ initial, onClose, onSave }: any) {
+  const [form, setForm] = useState(initial);
 
-  const playSound = (type: "success" | "error") => {
-  const audio = new Audio(
-    type === "success"
-      ? "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
-      : "https://actions.google.com/sounds/v1/alarms/beep_error.ogg"
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-lg animate-in fade-in">
+      <div className="w-full max-w-md rounded-2xl bg-card p-6 shadow-card-luxe space-y-3 animate-in zoom-in">
+
+        <h2 className="text-lg font-display text-primary">Editar Produto</h2>
+
+        {["name", "brand", "price", "description", "image"].map((field) => (
+          <input
+            key={field}
+            className="w-full border border-border rounded-lg p-2 bg-background/40 focus:border-primary focus:ring-2 focus:ring-primary/30 transition"
+            value={(form as any)[field]}
+            onChange={(e) =>
+              setForm({ ...form, [field]: e.target.value })
+            }
+          />
+        ))}
+
+        <select
+          className="w-full border border-border rounded-lg p-2 bg-background/40"
+          value={form.category}
+          onChange={(e) =>
+            setForm({ ...form, category: e.target.value })
+          }
+        >
+          <option value="perfumes">Perfumes</option>
+          <option value="cosmeticos">Cosméticos</option>
+          <option value="beleza">Beleza</option>
+        </select>
+
+        <button
+          onClick={() => {
+            onSave(form);
+            onClose();
+          }}
+          className="w-full bg-gradient-luxe text-white py-2 rounded-lg hover:shadow-glow-gold hover:scale-[1.02] transition"
+        >
+          Salvar
+        </button>
+
+        <button
+          onClick={onClose}
+          className="text-muted-foreground hover:text-primary transition"
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
   );
-  audio.volume = 0.4;
-  audio.play();
-};
+}
+
+/* ================= INNER ================= */
+function Inner() {
+  const [toast, setToast] = useState<any>(null);
+  const [banners, setBanners] = useState([
+  { id: 1, text: "✨ Bem-vindo à MR Variedades & Cosméticos — os melhores perfumes e cosméticos com preço justo e qualidade premium!" },
+  { id: 2, text: "✨ Beleza, autoestima e qualidade em um só lugar. Descubra perfumes e cosméticos que elevam sua presença!" },
+]);
   const [shake, setShake] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [tab, setTab] = useState<"produtos" | "promocoes" | "banner">(
-    "produtos"
-  );
+  const [tab, setTab] = useState<"produtos" | "promocoes" | "banner">("produtos");
 
   const [list, setList] = useState<Product[]>(INITIAL);
   const [editing, setEditing] = useState<Product | null>(null);
 
-  const ADMIN_PASSWORD = "mr07102026";
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
+
+  const ADMIN_PASSWORD = "mr07102026";
 
   const remove = (id: string) =>
     setList((p) => p.filter((x) => x.id !== id));
@@ -65,21 +110,38 @@ function Inner() {
   const save = (p: Product) => {
     setList((prev) => {
       const exists = prev.find((x) => x.id === p.id);
-      return exists
-        ? prev.map((x) => (x.id === p.id ? p : x))
-        : [...prev, p];
+      return exists ? prev.map((x) => (x.id === p.id ? p : x)) : [...prev, p];
     });
+
     setEditing(null);
+    setToast({ type: "success", message: "Produto salvo com sucesso!" });
+  };
+
+  /* AUTO CLOSE TOAST */
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 2200);
+    return () => clearTimeout(t);
+  }, [toast]);
+
+  const playSound = (type: "success" | "error") => {
+    const audio = new Audio(
+      type === "success"
+        ? "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+        : "https://actions.google.com/sounds/v1/alarms/beep_error.ogg"
+    );
+    audio.volume = 0.4;
+    audio.play();
   };
 
   const Toast = () =>
     toast ? (
-      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 animate-in fade-in">
         <div
-          className={`px-5 py-3 rounded-xl text-sm font-medium shadow-luxe transition-all duration-300 animate-in fade-in zoom-in ${
+          className={`px-5 py-3 rounded-xl shadow-glow-gold backdrop-blur text-white ${
             toast.type === "success"
-              ? "bg-gradient-luxe text-primary-foreground"
-              : "bg-red-500 text-white"
+              ? "bg-gradient-luxe"
+              : "bg-red-500"
           }`}
         >
           {toast.message}
@@ -87,256 +149,205 @@ function Inner() {
       </div>
     ) : null;
 
-  // 🔐 LOGIN
- if (!authenticated) {
-  return (
-    <main className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
+  /* LOGIN */
+  if (!authenticated) {
+    return (
+      <main className="relative min-h-screen flex items-center justify-center overflow-hidden">
 
-      {/* fundo igual site */}
-      <Particles />
-
-      {/* overlay escuro premium */}
-      <div className="absolute inset-0 bg-background/70 backdrop-blur-xl" />
-
-      {/* card login */}
-      <div
-        className={`
-          relative z-10 w-full max-w-md rounded-2xl
-          border border-border
-          bg-card/30 backdrop-blur-2xl
-          shadow-card-luxe
-          p-8
-          transition-all duration-300
-          ${shake ? "animate-shake" : ""}
-        `}
-      >
-
-        <div className="text-center mb-6">
-          <h1 className="text-2xl font-display text-primary">
-            Área Administrativa
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Digite a senha para continuar
-          </p>
+        <div className="absolute inset-0 z-0">
+          <Particles />
         </div>
 
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Senha de acesso"
-          className="
-            w-full rounded-xl border border-border
-            bg-background/40 backdrop-blur-md
-            px-3 py-3 text-sm
-            focus:border-primary focus:ring-2 focus:ring-primary/30
-            transition
-          "
-        />
+        <div className="absolute inset-0 bg-black/50 z-10" />
 
-        <button
-  onClick={() => {
-    if (loading) return;
+        <div className={`relative z-20 w-full max-w-md p-8 ${shake ? "animate-shake" : ""}`}>
+          <h1 className="text-2xl text-primary text-center">
+            Área Administrativa
+          </h1>
 
-    setLoading(true);
+          <input
+            type="password"
+            className="w-full mt-4 p-2 rounded border bg-background/40"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-    setTimeout(() => {
-      if (password === ADMIN_PASSWORD) {
-        playSound("success");
+          <button
+            disabled={loading}
+            className="w-full mt-4 bg-gradient-luxe text-white p-2 rounded hover:shadow-glow-gold transition"
+            onClick={() => {
+              setLoading(true);
 
-        setToast({
-          type: "success",
-          message: "Acesso autorizado",
-        });
+              setTimeout(() => {
+                if (password === ADMIN_PASSWORD) {
+                  playSound("success");
+                  setToast({ type: "success", message: "Acesso autorizado" });
+                  setAuthenticated(true);
+                } else {
+                  playSound("error");
+                  setToast({ type: "error", message: "Senha incorreta" });
+                  setShake(true);
+                  setTimeout(() => setShake(false), 500);
+                }
 
-        setShake(false);
+                setLoading(false);
+              }, 300);
+            }}
+          >
+            {loading ? "Verificando..." : "Entrar"}
+          </button>
+        </div>
+      </main>
+    );
+  }
 
-        setTimeout(() => {
-          setAuthenticated(true);
-
-          setTimeout(() => {
-            setToast(null);
-            setLoading(false);
-          }, 1200);
-        }, 900);
-
-      } else {
-        playSound("error");
-
-        setToast({
-          type: "error",
-          message: "Senha incorreta",
-        });
-
-        setShake(true);
-
-        setTimeout(() => setShake(false), 500);
-
-        setTimeout(() => {
-          setToast(null);
-          setLoading(false);
-        }, 1500);
-      }
-    }, 300);
-  }}
-  disabled={loading}
-  className="
-    mt-4 w-full rounded-xl
-    bg-gradient-luxe
-    text-primary-foreground
-    py-2 font-medium
-    transition-all duration-300
-    hover:shadow-glow-gold hover:scale-[1.02]
-    active:scale-[0.98]
-    disabled:opacity-50
-  "
->
-  {loading ? "Verificando..." : "Entrar no painel"}
-</button>
-
-        <p className="mt-4 text-xs text-center text-muted-foreground">
-          Sistema seguro • acesso restrito
-        </p>
-      </div>
-    </main>
-  );
-}
-  // 🔓 PAINEL
+  /* PAINEL */
   return (
     <>
       <Toast />
 
-      <main className="mx-auto max-w-7xl px-4 py-12 md:px-8">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-primary">
-              Painel
-            </p>
-            <h1 className="mt-1 font-display text-4xl md:text-5xl">
-              Administração
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Gerencie produtos, promoções e banner.{" "}
-              <Link to="/" className="text-primary hover:underline">
-                Voltar à loja
-              </Link>
-            </p>
-          </div>
+      <main className="mx-auto max-w-7xl px-4 py-12">
 
-          <div className="inline-flex rounded-full border border-border bg-card p-1">
-            {(["produtos", "promocoes", "banner"] as const).map((t) => (
+
+        {/* MENU CORRIGIDO */}
+        <div className="flex items-center justify-center gap-4 mb-6 text-sm">
+          {["Produtos", "Promoções", "Banner"].map((t, i) => (
+            <div key={t} className="flex items-center gap-4">
               <button
-                key={t}
-                onClick={() => setTab(t)}
-                className={`rounded-full px-5 py-2 text-sm capitalize transition ${
-                  tab === t
-                    ? "bg-gradient-luxe text-primary-foreground shadow-glow-gold"
-                    : "text-muted-foreground hover:text-primary"
-                }`}
+                onClick={() => setTab(t as any)}
+                className={tab === t ? "text-primary" : "text-muted-foreground"}
               >
                 {t}
               </button>
-            ))}
-          </div>
+              {i < 2 && <span className="text-muted-foreground">---</span>}
+            </div>
+          ))}
         </div>
 
         {/* PRODUTOS */}
-        {tab === "produtos" && (
-          <section>
-            <div className="mb-4 flex justify-end">
-              <button
-                onClick={() =>
-                  setEditing({
-                    id: crypto.randomUUID(),
-                    name: "",
-                    brand: "",
-                    price: 0,
-                    description: "",
-                    category: "perfumes",
-                    image: "",
-                  })
-                }
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-luxe px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-card-luxe hover:shadow-glow-gold"
-              >
-                <Plus className="h-4 w-4" /> Novo produto
-              </button>
-            </div>
+        {tab === "Produtos" && (
+  <>
+    <button
+      onClick={() =>
+        setEditing({
+          id: crypto.randomUUID(),
+          name: "",
+          brand: "",
+          price: 0,
+          description: "",
+          category: "perfumes",
+          image: "",
+        })
+      }
+      className="
+        mb-4 bg-gradient-luxe text-white px-4 py-2 rounded
+        hover:shadow-glow-gold hover:scale-[1.05]
+        transition-all duration-300
+      "
+    >
+      + Novo produto
+    </button>
 
-            <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-card-luxe">
-              <table className="w-full text-sm">
-                <thead className="bg-muted/50 text-left text-xs uppercase tracking-wider text-muted-foreground">
-                  <tr>
-                    <th className="px-4 py-3">Produto</th>
-                    <th className="px-4 py-3">Marca</th>
-                    <th className="px-4 py-3">Categoria</th>
-                    <th className="px-4 py-3">Preço</th>
-                    <th className="px-4 py-3 text-right">Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {list.map((p) => (
-                    <tr key={p.id} className="border-t border-border">
-                      <td className="px-4 py-3 font-medium">{p.name}</td>
-                      <td className="px-4 py-3 text-muted-foreground">
-                        {p.brand}
-                      </td>
-                      <td className="px-4 py-3 capitalize text-muted-foreground">
-                        {p.category}
-                      </td>
-                      <td className="px-4 py-3 text-gradient-luxe font-semibold">
-                        {fmt(p.price)}
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <button
-                          onClick={() => setEditing(p)}
-                          className="mr-1 inline-flex h-8 w-8 items-center justify-center rounded-full hover:bg-muted text-primary"
-                        >
-                          <Pencil className="h-3.5 w-3.5" />
-                        </button>
-                        <button
-                          onClick={() => remove(p.id)}
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-full hover:bg-muted text-destructive"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-        )}
+    {list.map((p) => (
+      <div
+        key={p.id}
+        className="
+          flex justify-between border p-3 rounded
+          hover:shadow-glow-gold/20
+          transition-all duration-300
+        "
+      >
+        {p.name}
+
+        <div className="flex gap-2">
+          <button
+            onClick={() => setEditing(p)}
+            className="
+              text-primary
+              hover:scale-125 hover:drop-shadow-lg
+              transition
+            "
+          >
+            <Pencil />
+          </button>
+
+          <button
+            onClick={() => remove(p.id)}
+            className="
+              text-red-400
+              hover:scale-125 hover:drop-shadow-lg
+              transition
+            "
+          >
+            <Trash2 />
+          </button>
+        </div>
+      </div>
+    ))}
+  </>
+)}
 
         {/* PROMOÇÕES */}
-        {tab === "promocoes" && (
-          <section className="rounded-2xl border border-border bg-card p-8 shadow-card-luxe">
-            <h2 className="font-display text-2xl">Promoções ativas</h2>
-            <ul className="mt-6 divide-y divide-border">
-              {list
-                .filter((p) => p.promo)
-                .map((p) => (
-                  <li
-                    key={p.id}
-                    className="flex items-center justify-between py-3"
-                  >
-                    <span>{p.name}</span>
-                    <span className="text-sm text-muted-foreground">
-                      <span className="line-through mr-2">
-                        {p.oldPrice && fmt(p.oldPrice)}
-                      </span>
-                      <span className="text-gradient-luxe font-semibold">
-                        {fmt(p.price)}
-                      </span>
-                    </span>
-                  </li>
-                ))}
-            </ul>
-          </section>
-        )}
+        {tab === "Promoções" && (
+  <div className="space-y-2">
+    {list.filter(p => p.promo).map((p) => (
+      <div
+        key={p.id}
+        className="
+          flex justify-between border p-3 rounded
+          hover:shadow-glow-gold/20
+          transition-all duration-300
+        "
+      >
+        {p.name}
+
+        <div className="flex gap-2">
+          <button
+            onClick={() => setEditing(p)}
+            className="text-primary hover:scale-125 transition"
+          >
+            <Pencil />
+          </button>
+
+          <button
+            onClick={() => remove(p.id)}
+            className="text-red-400 hover:scale-125 transition"
+          >
+            <Trash2 />
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
 
         {/* BANNER */}
-        {tab === "banner" && <BannerEditor />}
+{tab === "Banner" && (
+  <div className="space-y-4">
+
+    {banners.map((b, index) => (
+      <div
+        key={b.id}
+        className="border border-border rounded-lg p-3 transition hover:shadow-glow-gold"
+      >
+        <p className="text-sm text-muted-foreground mb-2">
+          Banner {index + 1}
+        </p>
+
+        <input
+          className="w-full border rounded p-2 bg-background/40 transition focus:ring-2 focus:ring-primary/30"
+          value={b.text}
+          onChange={(e) => {
+            const copy = [...banners];
+            copy[index].text = e.target.value;
+            setBanners(copy);
+          }}
+        />
+      </div>
+    ))}
+
+  </div>
+)}
 
         {editing && (
           <ProductForm
@@ -345,6 +356,7 @@ function Inner() {
             onSave={save}
           />
         )}
+
       </main>
     </>
   );

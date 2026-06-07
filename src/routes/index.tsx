@@ -45,6 +45,16 @@ const grouped = {
 
  const featured = filtered.filter((p) => p.featured);
  const promos = filtered.filter((p) => p.promo);
+const [banners] = useState([
+  {
+    id: 1,
+    text: "✨ Bem-vindo à MR Variedades & Cosméticos — os melhores perfumes e cosméticos com preço justo e qualidade premium!",
+  },
+  {
+    id: 2,
+    text: "✨ Beleza, autoestima e qualidade em um só lugar. Descubra perfumes e cosméticos que elevam sua presença!",
+  },
+]);
 
   return (
     <div className="relative min-h-screen">
@@ -52,6 +62,18 @@ const grouped = {
       <div className="relative z-10">
         <Header onSearch={setQuery} />
         <Hero />
+
+        {/* 🔥 BANNERS AQUI */}
+<section className="relative z-10 mx-auto max-w-7xl px-4 py-6 space-y-3">
+  {banners.map((b) => (
+    <div
+      key={b.id}
+      className="rounded-lg border bg-background/40 p-3 text-center text-sm md:text-base animate-in fade-in"
+    >
+      {b.text}
+    </div>
+  ))}
+</section>
 
 {/* 1. DESTAQUES */}
 {featured.length > 0 && (

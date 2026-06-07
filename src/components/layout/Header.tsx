@@ -13,7 +13,13 @@ export function Header({ onSearch }: Props) {
   return (
     <header className="sticky top-0 z-40 glass-panel">
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-4 md:px-8">
-        <Link to="/" className="group flex items-center gap-2">
+
+        {/* LOGO */}
+        <Link
+          to="/"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="group flex items-center gap-2"
+        >
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-luxe shadow-glow-gold">
             <Sparkles className="h-4 w-4 text-primary-foreground" />
           </span>
@@ -22,6 +28,7 @@ export function Header({ onSearch }: Props) {
           </span>
         </Link>
 
+        {/* SEARCH */}
         <div className="relative ml-auto hidden flex-1 max-w-md md:block">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
@@ -35,26 +42,33 @@ export function Header({ onSearch }: Props) {
           />
         </div>
 
+        {/* NAV */}
         <nav className="hidden items-center gap-6 text-sm text-muted-foreground lg:flex">
-  <Link to="/" className="transition hover:text-primary">
-    Início
-  </Link>
+          <Link
+            to="/"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="transition hover:text-primary"
+          >
+            Início
+          </Link>
 
-  <a href="/#lancamentos" className="transition hover:text-primary">
-    Lançamentos
-  </a>
+          <a href="#lancamentos" className="transition hover:text-primary">
+            Lançamentos
+          </a>
 
-  <a href="/#promocoes" className="transition hover:text-primary">
-    Promoções
-  </a>
+          <a href="#promocoes" className="transition hover:text-primary">
+            Promoções
+          </a>
 
-  <a href="/#categorias" className="transition hover:text-primary">
-    Categorias
-  </a>
-</nav>
+          <a href="#categorias" className="transition hover:text-primary">
+            Categorias
+          </a>
+        </nav>
 
+        {/* RIGHT SIDE */}
         <div className="ml-auto flex items-center gap-2 md:ml-0">
           <ThemeToggle />
+
           <Link
             to="/carrinho"
             aria-label="Ver carrinho"

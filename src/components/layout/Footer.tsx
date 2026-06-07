@@ -18,10 +18,14 @@ export function Footer() {
         <div>
           <h4 className="mb-3 text-sm font-semibold tracking-wide uppercase text-foreground">Navegação</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><a href="#produtos" className="hover:text-primary transition">Produtos em destaque</a></li>
+            <li>
+  <a href="#lancamentos" className="hover:text-primary transition">
+    Lançamentos
+  </a>
+</li>
             <li><a href="#promocoes" className="hover:text-primary transition">Promoções</a></li>
             <li><a href="#categorias" className="hover:text-primary transition">Categorias</a></li>
-            <li><a href="#beneficios" className="hover:text-primary transition">Benefícios</a></li>
+        
           </ul>
         </div>
         <div>
