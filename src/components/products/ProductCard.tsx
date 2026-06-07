@@ -1,7 +1,7 @@
-import { Plus } from "lucide-react";
+import { Plus, ShoppingBag } from "lucide-react";
 import type { Product } from "@/data/products";
 import { useCart } from "@/contexts/CartContext";
-
+import { toast } from "sonner";
 const fmt = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
@@ -37,14 +37,22 @@ export function ProductCard({ product }: { product: Product }) {
             )}
             <p className="text-xl font-semibold text-gradient-luxe">{fmt(product.price)}</p>
           </div>
-          <button
-            onClick={() => add(product)}
-            aria-label={`Adicionar ${product.name} ao carrinho`}
-            className="group/btn inline-flex h-11 items-center gap-1.5 rounded-full bg-gradient-luxe px-4 text-sm font-medium text-primary-foreground shadow-card-luxe transition-all hover:shadow-glow-gold active:scale-95"
-          >
-            <Plus className="h-4 w-4 transition-transform group-hover/btn:rotate-90" />
-            Adicionar
-          </button>
+        <button
+  onClick={() => {
+    add(product);
+
+    toast.success(`${product.name} adicionado ao carrinho!`, {
+  description: "Produto adicionado com sucesso.",
+  icon: <ShoppingBag className="h-4 w-4" />,
+});
+  }}
+  aria-label={`Adicionar ${product.name} ao carrinho`}
+  className="group/btn inline-flex h-11 items-center gap-1.5 rounded-full bg-gradient-luxe px-4 text-sm font-medium text-primary-foreground shadow-card-luxe transition-all hover:shadow-glow-gold active:scale-95"
+>
+  <Plus className="h-4 w-4 transition-transform group-hover/btn:rotate-90" />
+  Adicionar
+</button>
+
         </div>
       </div>
     </article>

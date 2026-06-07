@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import { Minus, Plus, ShoppingBag, Trash2, AlertTriangle } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Particles } from "@/components/layout/Particles";
 import { useCart } from "@/contexts/CartContext";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/carrinho")({
   head: () => ({
@@ -82,12 +83,19 @@ function CartPage() {
                           <p className="font-display text-lg leading-tight">{product.name}</p>
                         </div>
                         <button
-                          onClick={() => remove(product.id)}
-                          className="text-muted-foreground hover:text-destructive"
-                          aria-label="Remover"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+  onClick={() => {
+    remove(product.id);
+
+    toast.error(`${product.name} removido do carrinho`, {
+  description: "Produto removido com sucesso.",
+  icon: <Trash2 className="h-4 w-4" />,
+});
+  }}
+  className="text-muted-foreground hover:text-destructive"
+  aria-label="Remover"
+>
+  <Trash2 className="h-4 w-4" />
+</button>
                       </div>
                       <div className="mt-auto flex items-center justify-between">
                         <div className="inline-flex items-center rounded-full border border-border">
@@ -133,17 +141,25 @@ function CartPage() {
                   Finalizar pelo WhatsApp
                 </button>
                 <button
-                  onClick={sendInstagram}
-                  className="w-full rounded-full border border-primary/40 py-3 text-sm font-medium text-primary transition hover:bg-primary/5"
-                >
-                  Finalizar pelo Instagram
-                </button>
-                <button
-                  onClick={clear}
-                  className="w-full py-2 text-xs uppercase tracking-wider text-muted-foreground hover:text-destructive"
-                >
-                  Esvaziar sacola
-                </button>
+  onClick={sendInstagram}
+  className="w-full rounded-full border border-primary/40 py-3 text-sm font-medium text-primary transition hover:bg-primary/5"
+>
+  Finalizar pelo Instagram
+</button>
+
+<button
+  onClick={() => {
+    clear();
+
+    toast.warning("Carrinho esvaziado", {
+  description: "Todos os produtos foram removidos.",
+  icon: <AlertTriangle className="h-4 w-4" />,
+});
+  }}
+  className="w-full py-2 text-xs uppercase tracking-wider text-muted-foreground hover:text-destructive"
+>
+  Esvaziar carrinho
+</button>
               </aside>
             </div>
           )}

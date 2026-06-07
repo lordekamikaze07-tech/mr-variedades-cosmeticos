@@ -8,6 +8,8 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { Toaster } from "sonner";
+import { Minus, Plus, ShoppingBag, Trash2, AlertTriangle } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -124,10 +126,39 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <CartProvider>
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
+
+          <Toaster
+  position="top-right"
+  closeButton
+  expand
+  richColors={false}
+  theme="system"
+  toastOptions={{
+    classNames: {
+      toast:
+        "bg-card border border-primary/30 text-foreground shadow-glow-gold rounded-2xl backdrop-blur-xl",
+
+      title:
+        "font-display text-foreground",
+
+      description:
+        "text-muted-foreground",
+
+      actionButton:
+        "bg-primary text-primary-foreground",
+
+      cancelButton:
+        "bg-muted text-foreground",
+
+      closeButton:
+        "bg-background border-border text-foreground",
+    },
+  }}
+/>
         </CartProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
 }
+

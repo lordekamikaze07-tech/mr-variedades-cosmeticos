@@ -36,11 +36,22 @@ export function Header({ onSearch }: Props) {
         </div>
 
         <nav className="hidden items-center gap-6 text-sm text-muted-foreground lg:flex">
-          <Link to="/" className="transition hover:text-primary">Início</Link>
-          <a href="/#produtos" className="transition hover:text-primary">Produtos</a>
-          <a href="/#promocoes" className="transition hover:text-primary">Promoções</a>
-          <a href="/#categorias" className="transition hover:text-primary">Categorias</a>
-        </nav>
+  <Link to="/" className="transition hover:text-primary">
+    Início
+  </Link>
+
+  <a href="/#lancamentos" className="transition hover:text-primary">
+    Lançamentos
+  </a>
+
+  <a href="/#promocoes" className="transition hover:text-primary">
+    Promoções
+  </a>
+
+  <a href="/#categorias" className="transition hover:text-primary">
+    Categorias
+  </a>
+</nav>
 
         <div className="ml-auto flex items-center gap-2 md:ml-0">
           <ThemeToggle />
